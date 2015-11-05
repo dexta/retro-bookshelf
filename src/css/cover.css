@@ -1,0 +1,133 @@
+body {
+  min-height: 2000px;
+  padding-top: 70px;
+}
+/* http://css3.bradshawenterprises.com/flip/ */
+.book {
+  position: relative;
+  background-color: #DDD;
+  margin: 4px ;
+  float: left;
+  height: 525px;
+  width: 75px;
+  /*z-index: -1;*/
+}
+
+.spine {
+  position: absolute;
+  background-color: #00F;
+  float: left;
+  width: 75px;
+  height: 525px;
+  animation-duration: .51s; 
+  animation-fill-mode: both; 
+  animation-timing-function: linear;
+}
+
+.cover {
+  position: absolute;
+  background-color: #448;
+  float: left;
+  margin-left: 75px;
+  width: 384px;
+  height: 525px;
+  transform-origin:0 50%;
+  transform: rotateY(90deg);
+  transform-style: preserve-3d;
+  animation-duration: .5s; 
+  animation-fill-mode: both; 
+  animation-timing-function: linear; 
+}
+
+.bookUP {
+  z-index: 91;
+}
+
+.face {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+}
+
+.face.back {
+  position: block;
+  transform: rotateX(180deg);
+}
+
+.btnRotate {
+
+  /*margin-left: -30px;*/
+  margin-top: -100px;
+  z-index: 99;
+}
+
+.animFlipInY {
+  animation-name: flipInY;
+}
+
+.animScaleUp {
+  animation-name: scaleUp;
+}
+
+.coverFlipInX {
+  animation-name: coverFlipInX;
+}
+
+.coverFlipOutX {
+  animation-name: coverFlipOutX;
+}
+
+@keyframes flipInY { 
+      0% { 
+          transform: perspective(800px) rotateY(90deg) scale(1.01);
+      } 
+      40% { 
+          transform: perspective(800px) rotateY(60deg) scale(1.03); 
+      } 
+      70% { 
+          transform: perspective(800px) rotateY(30deg) scale(1.05); 
+      } 
+      100% { 
+          transform: perspective(800px)  rotateY(0deg) scale(1.08); 
+      } 
+    } 
+@keyframes coverFlipInX { 
+      from { transform: rotateX(0deg) scale(1.08); }
+      to { transform: rotateX(180deg) scale(1.08); }
+    }
+@keyframes coverFlipOutX { 
+      from { transform: rotateX(180deg) scale(1.08); }
+      to { transform: rotateX(0deg) scale(1.08); }
+    }
+@keyframes scaleUp {
+  0% { 
+          transform: scale(1.01); 
+      }
+  40% { 
+          transform: scale(1.03); 
+      }
+  70% { 
+          transform: scale(1.05); 
+      }
+  100% { 
+          transform: scale(1.08); 
+      }
+}
+
+
+img.boxart-side {
+  width: 75px;
+  height: 525px;
+  border: none;
+  margin: 0;
+  padding: 0;
+}
+
+img.boxart-front {
+  width: 384px;
+  height: 525px;
+  border: none;
+  margin: 0;
+  padding: 0;
+}
