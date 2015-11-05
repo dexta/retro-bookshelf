@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -21,6 +20,135 @@
         min-height: 2000px;
         padding-top: 70px;
       }
+      /* http://css3.bradshawenterprises.com/flip/ */
+      .book {
+        position: relative;
+        background-color: #DDD;
+        margin: 4px ;
+        float: left;
+        height: 525px;
+        width: 75px;
+        /*z-index: -1;*/
+      }
+
+      .spine {
+        position: absolute;
+        background-color: #00F;
+        float: left;
+        width: 75px;
+        height: 525px;
+        animation-duration: .51s; 
+        animation-fill-mode: both; 
+        animation-timing-function: linear;
+      }
+
+      .cover {
+        position: absolute;
+        background-color: #448;
+        float: left;
+        margin-left: 75px;
+        width: 384px;
+        height: 525px;
+        transform-origin:0 50%;
+        transform: rotateY(90deg);
+        transform-style: preserve-3d;
+        animation-duration: .5s; 
+        animation-fill-mode: both; 
+        animation-timing-function: linear; 
+      }
+
+      .bookUP {
+        z-index: 91;
+      }
+
+      .face {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        backface-visibility: hidden;
+      }
+
+      .face.back {
+        position: block;
+        transform: rotateX(180deg);
+      }
+
+      .btnRotate {
+
+        /*margin-left: -30px;*/
+        margin-top: -100px;
+        z-index: 99;
+      }
+
+      .animFlipInY {
+        animation-name: flipInY;
+      }
+
+      .animScaleUp {
+        animation-name: scaleUp;
+      }
+
+      .coverFlipInX {
+        animation-name: coverFlipInX;
+      }
+
+      .coverFlipOutX {
+        animation-name: coverFlipOutX;
+      }
+      @keyframes flipInY { 
+            0% { 
+                transform: perspective(800px) rotateY(90deg) scale(1.01);
+            } 
+            40% { 
+                transform: perspective(800px) rotateY(60deg) scale(1.03); 
+            } 
+            70% { 
+                transform: perspective(800px) rotateY(30deg) scale(1.05); 
+            } 
+            100% { 
+                transform: perspective(800px)  rotateY(0deg) scale(1.08); 
+            } 
+          } 
+      @keyframes coverFlipInX { 
+            from { transform: rotateX(0deg) scale(1.08); }
+            to { transform: rotateX(180deg) scale(1.08); }
+          }
+      @keyframes coverFlipOutX { 
+            from { transform: rotateX(180deg) scale(1.08); }
+            to { transform: rotateX(0deg) scale(1.08); }
+          }
+      @keyframes scaleUp {
+        0% { 
+                transform: scale(1.01); 
+            }
+        40% { 
+                transform: scale(1.03); 
+            }
+        70% { 
+                transform: scale(1.05); 
+            }
+        100% { 
+                transform: scale(1.08); 
+            }
+      }
+
+
+      img.boxart-side {
+        width: 75px;
+        height: 525px;
+        border: none;
+        margin: 0;
+        padding: 0;
+      }
+
+      img.boxart-front {
+        width: 384px;
+        height: 525px;
+        border: none;
+        margin: 0;
+        padding: 0;
+      }
+
     </style>
   </head>
 
@@ -62,16 +190,97 @@
 
     <div class="container">
       <div class="row">
-
+        <div class="col-lg-12">
+          <div id="bookTarget"></div>
+        </div>
       </div> <!-- /row -->
     </div> <!-- /container -->
 
+
+    <script id="vhs-cover" type="text/x-handlebars-template">
+      {{#each this}}
+      <div class="book" id="book_{{uname}}">
+        <div class="spine" id="spine_{{uname}}">
+          <img src="{{sideimg}}" class="boxart-side">
+            <button class="btn btn-default btnRotate" id="rotate_{{uname}}">
+              rotate
+            </button>
+
+        </div>
+        <div id="cover_{{uname}}" class="cover">
+          <div class="front face">
+            <img src="{{frontimg}}" class="boxart-front">
+
+          </div>
+          <div class="back face">
+            <img src="{{backimg}}" class="boxart-front">
+          </div>
+        </div>
+      </div>
+      {{/each}}
+    </script>
 
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster 'Voodoo jada jada' -->
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.4/handlebars.min.js"></script>
+    <script type="text/javascript">
+      var cover;
+      var doItOpen = false;
 
+      
+      $(function() {
+        $.getJSON("cover.json",function() { console.log("loading cover ");})
+         .done(function(data){
+            cover = data;
+            renderTemplate(data);
+         });
+
+        $(".btn").on("click",function() {
+          var id = $(this).attr("id").split("_");
+          console.log("id "+id);
+          if(id[0]==="rotate") {  
+            if ($("#cover_"+id[1]).hasClass("coverFlipInX") || $("#cover_"+id[1]).hasClass("coverFlipOutX")) {
+              $("#cover_"+id[1]).toggleClass("coverFlipInX coverFlipOutX");
+            } else { 
+              $("#cover_"+id[1]).toggleClass("coverFlipInX");
+            }
+          }
+        });
+      $(".spine").hover(
+        function() {coverAnimOpen(this);},
+        function() {coverAnimClose(this);}
+        );
+      
+      $(".spine").on("click",function(){
+        doItOpen = (doItOpen)? false : true;
+        });
+
+      }) // end jQuery ready
+      
+      function renderTemplate(data) {
+        var handleSrc = $("#vhs-cover").html();
+        var handleTem = Handlebars.compile(handleSrc);
+        var html = handleTem(data);
+        $("#bookTarget").html(html);
+      }
+
+      function coverAnimOpen(that) {
+        if(doItOpen) return;
+        var doAt = $(that).attr("id").split("_")[1];
+          $("#book_"+doAt).addClass("bookUP");
+          $("#spine_"+doAt).addClass("animScaleUp"); 
+          $("#cover_"+doAt).addClass("animFlipInY");
+      }
+      function coverAnimClose(that) {
+        if(doItOpen) return;
+        var doAt = $(that).attr("id").split("_")[1];
+          $("#book_"+doAt).removeClass("bookUP");
+          $("#spine_"+doAt).removeClass("animScaleUp"); 
+          $("#cover_"+doAt).removeClass("animFlipInY coverFlipInX coverFlipOutX");
+      }
+    </script>
   </body>
 </html>
