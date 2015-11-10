@@ -1,3 +1,10 @@
+@full-height: 525px;
+@spine-width: 75px;
+@icons-width: 28px;
+@cover-width: 414px;
+
+@icons-padding-top: 233px;
+
 body {
   min-height: 2000px;
   padding-top: 70px;
@@ -5,20 +12,27 @@ body {
 /* http://css3.bradshawenterprises.com/flip/ */
 .book {
   position: relative;
-  background-color: #DDD;
   margin: 4px ;
   float: left;
-  height: 525px;
-  width: 75px;
+  height: @full-height;
+  width: (@icons-width + @spine-width);
   /*z-index: -1;*/
+}
+
+.sideIcons {
+  position: absolute;
+  float: left;
+  width: @icons-width;
+  height: @full-height;
+  padding-top: @icons-padding-top;
 }
 
 .spine {
   position: absolute;
-  background-color: #00F;
   float: left;
-  width: 75px;
-  height: 525px;
+  /*margin-left: 28px;*/
+  width: @spine-width;
+  height: @full-height;
   animation-duration: .51s; 
   animation-fill-mode: both; 
   animation-timing-function: linear;
@@ -26,11 +40,10 @@ body {
 
 .cover {
   position: absolute;
-  background-color: #448;
   float: left;
-  margin-left: 75px;
-  width: 384px;
-  height: 525px;
+  margin-left: (@icons-width + @spine-width);
+  width: @cover-width;
+  height: @full-height;
   transform-origin:0 50%;
   transform: rotateY(90deg);
   transform-style: preserve-3d;
@@ -117,17 +130,23 @@ body {
 
 
 img.boxart-side {
-  width: 75px;
-  height: 525px;
+  width: @spine-width;
+  height: @full-height;
+  border: none;
+  margin-left: @icons-width;
+  padding-left: 0;
+}
+
+img.boxart-front {
+  width: @cover-width;
+  height: @full-height;
   border: none;
   margin: 0;
   padding: 0;
 }
 
-img.boxart-front {
-  width: 384px;
-  height: 525px;
-  border: none;
-  margin: 0;
-  padding: 0;
+img.grayscale { 
+  filter: url("data:image/svg+xml;utf8,&lt;svg xmlns=\'http://www.w3.org/2000/svg\'&gt;&lt;filter id=\'grayscale\'&gt;&lt;feColorMatrix type=\'matrix\' values=\'0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0 0 0 1 0\'/&gt;&lt;/filter&gt;&lt;/svg&gt;#grayscale"); /* Firefox 10+, Firefox on Android */
+  filter: gray; /* IE6-9 */
+  -webkit-filter: grayscale(100%); /* Chrome 19+, Safari 6+, Safari 6+ iOS */
 }

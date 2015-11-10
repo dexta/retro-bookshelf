@@ -3,13 +3,16 @@ var doItOpen = false;
 
 
 $(function() {
+  Handlebars.registerHelper("isGray",function(bool){
+    return (bool)? "" : " grayscale";
+  });
   $.getJSON("/json/cover.json",function() { console.log("loading cover ");})
    .done(function(data){
       cover = data;
       renderTemplate(data);
    });
 
-  $("#bookTarget").on("click","button",function() {
+  $("#bookTarget").on("click","i",function() {
     var id = $(this).attr("id").split("_");
     console.log("id "+id);
     if(id[0]==="rotate") {  
@@ -18,6 +21,9 @@ $(function() {
       } else { 
         $("#cover_"+id[1]).toggleClass("coverFlipInX");
       }
+    } else if(id[0]==="color") {
+      $("#cover_"+id[1]+" img").toggleClass("grayscale");
+      $("#spine_"+id[1]+" img").toggleClass("grayscale");
     }
   });
 
@@ -32,7 +38,7 @@ $(function() {
     doItOpen = (doItOpen)? false : true;
     });
 
-}) // end jQuery ready
+}); // end jQuery ready
 
 function renderTemplate(data) {
   var handleSrc = $("#vhs-cover").html();
