@@ -1,4 +1,4 @@
-assets/
+assets
 node_modules
 dest
 server/pyapp/__pycache__/
