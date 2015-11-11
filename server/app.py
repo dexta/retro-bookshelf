@@ -1,4 +1,4 @@
-from bottle import route, run, request, response, redirect, static_file
+from pyapp.bottle import route, run, request, response, redirect, static_file
 import json
 
 rootPath = "../dest/"
