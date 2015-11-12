@@ -32,7 +32,7 @@ module.exports = function(grunt) {
           }
         ],
       },    
-      jsons: {
+      json: {
         files: [         
           { cwd: 'src/json/',
             src: ['*.*'], 
