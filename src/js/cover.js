@@ -1,15 +1,25 @@
 var cover;
 var doItOpen = false;
 
+function setImgSize(data,str) {
+  for(var c=0,cl=data.length;c<cl;c++) {
+    console.log(data[c].uname);
+    data[c].sideimg = "/img/snes/"+str+"/"+data[c].uname+"_spine.jpg";
+    data[c].frontimg = "/img/snes/"+str+"/"+data[c].uname+"_front.jpg";
+    data[c].backimg = "/img/snes/"+str+"/"+data[c].uname+"_back.jpg";
+    data[c].size = str;
+  }
+  return data;
+}
 
 $(function() {
   Handlebars.registerHelper("isGray",function(bool){
     return (bool)? "" : " grayscale";
   });
-  $.getJSON("/json/cover.json",function() { console.log("loading cover ");})
+  $.getJSON("/json/cover_v2.json",function() { console.log("loading cover ");})
    .done(function(data){
-      cover = data;
-      renderTemplate(data);
+      cover = setImgSize(data,"sm");
+      renderTemplate(cover);
    });
 
   $("#bookTarget").on("click","i",function() {
@@ -51,7 +61,7 @@ function coverAnimOpen(that) {
   if(doItOpen) return;
   var doAt = $(that).attr("id").split("_")[1];
     $("#book_"+doAt).addClass("bookUP");
-    $("#spine_"+doAt).addClass("animScaleUp"); 
+    $("#spine_"+doAt).addClass("animScaleUp");
     $("#cover_"+doAt).addClass("animFlipInY");
 }
 

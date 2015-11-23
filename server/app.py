@@ -31,7 +31,7 @@ def allStatic(path):
 		print("some ERROR: %s"%path)
 		return "404"
 
-	if path.find("assets")!=-1:
+	if path.find("img")!=-1:
 		rPath = assetPath
 	else:
 		rPath = rootPath
